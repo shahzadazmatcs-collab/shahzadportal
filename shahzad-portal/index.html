@@ -1,0 +1,1023 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CUI Student Companion | Muhammad Shahzad</title>
+<style>
+:root{--navy:#12315a;--blue:#1769aa;--bg:#f1f5fa;--line:#dce4ef;--text:#26374d;--green:#18865b;--red:#c03948}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
+input,select,textarea,button{font:inherit}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:7px;margin-top:5px;background:white}
+button{cursor:pointer}
+header{background:var(--navy);color:white;padding:17px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+header a{color:white}
+.layout{display:grid;grid-template-columns:205px minmax(0,1fr);min-height:90vh}
+nav{background:white;padding:12px;border-right:1px solid var(--line)}
+nav button{width:100%;display:block;text-align:left;padding:12px;border:0;background:white;border-radius:7px;margin-bottom:4px}
+nav button.active,nav button:hover{background:#e6f0fc;color:var(--blue)}
+main{padding:22px;max-width:1450px;width:100%;margin:auto}
+h1{font-size:25px;margin:0 0 8px}
+h2{font-size:19px;margin:0 0 13px}
+h3{font-size:16px}
+.muted{font-size:13px;color:#718096;line-height:1.6}
+.card{background:white;border:1px solid var(--line);border-radius:10px;padding:16px;margin:13px 0;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.courses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.stat{font-size:25px;font-weight:bold;color:var(--navy);margin:10px 0}
+label{display:block;font-size:13px;font-weight:bold;margin:10px 0}
+.btn{padding:10px 13px;border:0;border-radius:7px;background:var(--blue);color:white;font-weight:bold}
+.secondary{background:#e9f0f8;color:var(--navy)}
+.danger{background:#fff0f0;color:var(--red)}
+.small{padding:7px 9px;font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:#f4f7fb}
+.tablewrap{overflow-x:auto}
+.hidden{display:none!important}
+.notice{background:#fff7dc;padding:12px;border-radius:8px;font-size:13px;line-height:1.6}
+.quran{background:#123c61;color:white;border-radius:10px;padding:12px 16px;margin-bottom:18px}
+.quran summary{cursor:pointer;font-weight:bold}
+.arabic{direction:rtl;text-align:center;font:23px/2 serif}
+.urdu{direction:rtl;text-align:right;font:17px/1.9 serif}
+.quran a{color:white}
+.progress{height:8px;background:#e5eaf1;border-radius:10px;overflow:hidden;margin:8px 0}
+.progress span{height:100%;display:block;background:var(--green)}
+.good{color:var(--green);font-weight:bold}
+.bad{color:var(--red);font-weight:bold}
+.panel{background:#f5f8fc;border-radius:8px;padding:12px;margin:10px 0}
+#loginScreen{position:fixed;inset:0;z-index:100;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:20px}
+.loginbox{background:white;padding:26px;border-radius:13px;width:100%;max-width:370px}
+footer{text-align:center;padding:20px;color:#718096;font-size:12px}
+@media(max-width:850px){
+.layout{grid-template-columns:1fr}
+nav{display:flex;overflow-x:auto;gap:4px}
+nav button{white-space:nowrap;width:auto}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.courses{grid-template-columns:repeat(2,minmax(0,1fr))}
+main{padding:12px}
+}
+@media(max-width:520px){
+.courses,.two{grid-template-columns:1fr}
+main{padding:8px}
+.card{padding:12px}
+header{padding:12px;font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+<form class="loginbox" id="loginForm">
+<h2>🔐 CUI Student Portal</h2>
+<p class="muted">Muhammad Shahzad · BSCS · Attock Campus</p>
+<label>Password
+<input id="password" type="password" inputmode="numeric" required placeholder="Enter password">
+</label>
+<button class="btn" style="width:100%">Unlock Portal</button>
+<p id="loginError" class="bad"></p>
+</form>
+</div>
+
+<header>
+<div>
+<strong>CUI · STUDENT COMPANION</strong>
+<div class="muted" style="color:#dce8f8">COMSATS University Islamabad · Attock Campus</div>
+</div>
+<a href="https://atk-sis.comsats.edu.pk/COURSEREGISTRATION" target="_blank" rel="noopener">CUOnline ↗</a>
+</header>
+
+<div class="layout">
+<nav>
+<button class="active" data-page="dashboard">⌂ Dashboard</button>
+<button data-page="courses">▤ Courses</button>
+<button data-page="marks">▥ Marks & Grades</button>
+<button data-page="cgpa">◈ CGPA & Result Card</button>
+<button data-page="attendance">◷ Attendance</button>
+<button data-page="lectures">▧ Lectures</button>
+<button data-page="profile">♙ Profile & Backup</button>
+</nav>
+
+<main>
+<details class="quran">
+<summary>﷽ · سورۃ الفاتحہ</summary>
+<div class="arabic">
+بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ<br>
+الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ<br>
+الرَّحْمَٰنِ الرَّحِيمِ<br>
+مَالِكِ يَوْمِ الدِّينِ<br>
+إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ<br>
+اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ<br>
+صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ<br>
+غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ
+</div>
+<p class="urdu">اللہ کے نام سے جو نہایت مہربان، بہت رحم کرنے والا ہے۔ سب تعریف اللہ ہی کے لیے ہے جو تمام جہانوں کا پروردگار ہے۔ نہایت مہربان، بہت رحم کرنے والا۔ روزِ جزا کا مالک۔ ہم تیری ہی عبادت کرتے ہیں اور تجھ ہی سے مدد مانگتے ہیں۔ ہمیں سیدھے راستے پر چلا، ان لوگوں کے راستے پر جن پر تو نے انعام فرمایا، نہ ان کے جن پر غضب ہوا اور نہ گمراہوں کے۔</p>
+<a href="https://quran.com/ur/al-fatihah" target="_blank" rel="noopener">مکمل سورت اور ترجمہ ↗</a>
+</details>
+
+<section id="dashboard" class="page">
+<h1 id="welcome">Assalam-o-Alaikum, Muhammad Shahzad!</h1>
+<p class="muted">Your personal academic dashboard.</p>
+<div class="grid">
+<div class="card"><div class="muted">Courses</div><div class="stat" id="sCourses">0</div></div>
+<div class="card"><div class="muted">Overall Attendance</div><div class="stat" id="sAttendance">—</div></div>
+<div class="card"><div class="muted">Previous CGPA</div><div class="stat" id="sPrevious">—</div></div>
+<div class="card"><div class="muted">Updated CGPA</div><div class="stat" id="sCGPA">—</div></div>
+</div>
+<div class="card"><h2>My Courses</h2><div id="dashboardCourses" class="courses"></div></div>
+<div class="card"><h2>Academic Alerts</h2><div id="alerts" class="notice">Add your courses to begin.</div></div>
+<div class="actions">
+<button class="btn" onclick="showPage('courses')">Add Course</button>
+<button class="btn" onclick="showPage('marks')">Update Marks</button>
+<button class="btn" onclick="showPage('attendance')">Update Attendance</button>
+<button class="btn" onclick="showPage('cgpa')">Update CGPA</button>
+</div>
+</section>
+
+<section id="courses" class="page hidden">
+<h1>Course Registration</h1>
+<p class="muted">Register theory-only, lab-only, or combined courses.</p>
+<div class="card">
+<form id="courseForm">
+<div class="two">
+<label>Course name<input id="cName" required placeholder="Data Structures"></label>
+<label>Course code<input id="cCode" required placeholder="CSC112"></label>
+<label>Semester<input id="cSemester" placeholder="Fall 2026"></label>
+<label>Course structure
+<select id="cStructure">
+<option value="combined">Theory + Lab</option>
+<option value="theory">Theory only</option>
+<option value="lab">Lab only</option>
+</select></label>
+<label>Total credit hours<input id="cCredits" type="number" min="1" max="6" value="4" required></label>
+<label>Theory credit hours<input id="cTheoryCH" type="number" min="0" max="6" value="3" required></label>
+<label>Lab credit hours<input id="cLabCH" type="number" min="0" max="6" value="1" required></label>
+</div>
+<div class="notice">Example: DS (4 CH) can be configured as 3 theory + 1 lab. Verify your registered credit-hour split.</div>
+<h3>Theory weightage (%)</h3>
+<div class="two">
+<label>Quizzes<input id="tQ" type="number" value="15" min="0" max="100"></label>
+<label>Assignments<input id="tA" type="number" value="10" min="0" max="100"></label>
+<label>Midterm<input id="tM" type="number" value="25" min="0" max="100"></label>
+<label>Final<input id="tF" type="number" value="50" min="0" max="100"></label>
+</div>
+<h3>Lab weightage (%)</h3>
+<div class="two">
+<label>Quizzes<input id="lQ" type="number" value="15" min="0" max="100"></label>
+<label>Assignments<input id="lA" type="number" value="10" min="0" max="100"></label>
+<label>Midterm / Practical<input id="lM" type="number" value="25" min="0" max="100"></label>
+<label>Final / Viva<input id="lF" type="number" value="50" min="0" max="100"></label>
+</div>
+<p class="muted">Assessment weights are editable. Confirm the official breakdown with your course instructor.</p>
+<button class="btn">Save Course</button>
+</form>
+</div>
+<div id="courseList" class="courses"></div>
+</section>
+
+<section id="marks" class="page hidden">
+<h1>Marks & Grades</h1>
+<div class="card">
+<label>Select course<select id="markCourse"></select></label>
+<div id="markEditor"></div>
+</div>
+<div class="card">
+<h2>Grade Scale Reference</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Percentage</th><th>Grade</th><th>Points</th></tr></thead>
+<tbody>
+<tr><td>85 and above</td><td>A</td><td>4.00</td></tr>
+<tr><td>80–84</td><td>A−</td><td>3.66</td></tr>
+<tr><td>75–79</td><td>B+</td><td>3.33</td></tr>
+<tr><td>71–74</td><td>B</td><td>3.00</td></tr>
+<tr><td>68–70</td><td>B−</td><td>2.66</td></tr>
+<tr><td>64–67</td><td>C+</td><td>2.33</td></tr>
+<tr><td>61–63</td><td>C</td><td>2.00</td></tr>
+<tr><td>58–60</td><td>C−</td><td>1.66</td></tr>
+<tr><td>54–57</td><td>D+</td><td>1.33</td></tr>
+<tr><td>50–53</td><td>D</td><td>1.00</td></tr>
+<tr><td>Below 50</td><td>F</td><td>0.00</td></tr>
+</tbody></table></div>
+<p class="muted">Confirm the grading scale and course-specific rules for your admission batch with COMSATS.</p>
+<a href="https://ww2.comsats.edu.pk/qec/downloads.aspx" target="_blank" rel="noopener">COMSATS official QEC resources ↗</a>
+</div>
+</section>
+
+<section id="cgpa" class="page hidden">
+<h1>Academic Record & CGPA</h1>
+<div class="card">
+<h2>Previous Result Card</h2>
+<p class="muted">Upload a PDF or image for reference. The calculator does not automatically extract CGPA from the uploaded document.</p>
+<label>Result card (PDF or image, maximum 1 MB)
+<input type="file" id="resultFile" accept=".pdf,.png,.jpg,.jpeg,.webp"></label>
+<div id="resultPreview" class="panel hidden"></div>
+<button class="btn secondary" type="button" id="removeResultFile">Remove uploaded card</button>
+</div>
+
+<div class="card">
+<h2>Previous Academic Record</h2>
+<div class="two">
+<label>Previous CGPA (out of 4.00)<input id="prevCGPA" type="number" min="0" max="4" step="0.01" placeholder="e.g. 3.25"></label>
+<label>Previous completed CGPA credit hours<input id="prevCredits" type="number" min="0" step="0.5" placeholder="e.g. 15"></label>
+<label>Current semester name<input id="semesterName" placeholder="Spring 2027"></label>
+<label>Current semester credits<input id="currentCredits" readonly></label>
+</div>
+<button class="btn" type="button" id="savePrevious">Save Previous Record</button>
+</div>
+
+<div class="card">
+<h2>Current Semester Results</h2>
+<div id="cgpaCourses"></div>
+<div class="notice">A course is counted when all configured assessment categories have valid marks. Confirm official course grades on CUOnline, particularly for combined theory/lab courses, repeated courses, and special grading rules.</div>
+</div>
+
+<div class="card">
+<h2>CGPA Summary</h2>
+<div class="grid">
+<div class="card"><div class="muted">Previous CGPA</div><div class="stat" id="outPrev">—</div></div>
+<div class="card"><div class="muted">Semester GPA</div><div class="stat" id="outSGPA">—</div></div>
+<div class="card"><div class="muted">Updated CGPA</div><div class="stat" id="outCGPA">—</div></div>
+<div class="card"><div class="muted">Total Credits</div><div class="stat" id="outCredits">—</div></div>
+</div>
+<div id="cgpaDetails" class="panel"></div>
+<div class="actions">
+<button class="btn" id="saveSemester" type="button">Save Semester Result</button>
+<button class="btn secondary" id="exportTranscript" type="button">Export Academic Summary</button>
+</div>
+</div>
+<div class="card"><h2>Semester-wise CGPA History</h2><div id="semesterHistory" class="tablewrap"></div></div>
+</section>
+
+<section id="attendance" class="page hidden">
+<h1>Separate Theory & Lab Attendance</h1>
+<p class="muted">Record each lecture and lab independently. A theory attendance record never changes lab attendance, and vice versa.</p>
+
+<div class="card">
+<h2>Record Daily Attendance</h2>
+<form id="attForm">
+<div class="two">
+<label>Course<select id="attCourse" required></select></label>
+<label>Component
+<select id="attComponent" required>
+<option value="theory">Theory / Lecture</option>
+<option value="lab">Lab / Practical</option>
+</select></label>
+<label>Date<input id="attDate" type="date" required></label>
+<label>Attendance status
+<select id="attStatus">
+<option value="present">Present</option>
+<option value="absent">Absent</option>
+</select></label>
+</div>
+<div id="attComponentInfo" class="notice">Select a course and component to view its attendance.</div>
+<button class="btn">Save Attendance</button>
+</form>
+</div>
+
+<div class="card">
+<h2>Attendance Summary by Component</h2>
+<p class="muted">Percentages are calculated separately for Theory and Lab. Overall percentage combines all recorded classes for that course.</p>
+<div id="attSummary" class="tablewrap"></div>
+</div>
+
+<div class="card">
+<h2>Attendance History</h2>
+<div class="two">
+<label>Filter course<select id="attFilterCourse"></select></label>
+<label>Filter component
+<select id="attFilterComponent">
+<option value="">Theory and Lab</option>
+<option value="theory">Theory only</option>
+<option value="lab">Lab only</option>
+</select></label>
+</div>
+<div id="attHistory" class="tablewrap"></div>
+</div>
+
+<div class="card">
+<h2>Import Attendance from CSV</h2>
+<p class="muted">Required columns: courseCode,component,date,status. Component must be theory or lab; status must be Present or Absent.</p>
+<input type="file" id="csvFile" accept=".csv">
+<div class="actions">
+<button class="btn secondary" type="button" onclick="downloadCSVTemplate()">Download CSV Template</button>
+</div>
+<p id="csvStatus" class="muted"></p>
+</div>
+</section>
+
+<section id="lectures" class="page hidden">
+<h1>Lectures & Study Resources</h1>
+<div class="card">
+<form id="resourceForm">
+<label>Course<select id="rCourse" required></select></label>
+<label>Resource title<input id="rTitle" required placeholder="Lecture 1: Introduction"></label>
+<label>Type<select id="rType"><option>Lecture</option><option>Notes</option><option>Assignment</option><option>Reference</option></select></label>
+<label>File (maximum 1 MB)<input id="rFile" type="file" accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.png,.jpg,.jpeg"></label>
+<label>Resource URL<input id="rUrl" type="url" placeholder="https://..."></label>
+<label>Notes<textarea id="rNotes" rows="3"></textarea></label>
+<button class="btn">Save Resource</button>
+</form>
+</div>
+<div class="card">
+<h2>Saved Resources</h2>
+<label>Filter by course<select id="rFilter"></select></label>
+<div id="resourceList"></div>
+</div>
+</section>
+
+<section id="profile" class="page hidden">
+<h1>Profile & Backup</h1>
+<div class="card">
+<form id="profileForm">
+<label>Full name<input id="pName" required></label>
+<label>Father's name<input id="pFather"></label>
+<label>Registration number<input id="pReg"></label>
+<label>University email<input id="pEmail" type="email"></label>
+<label>Degree<input id="pDegree"></label>
+<label>Campus<input id="pCampus"></label>
+<button class="btn">Save Profile</button>
+</form>
+</div>
+<div class="card">
+<h2>Backup & Restore</h2>
+<div class="actions">
+<button class="btn" type="button" onclick="exportBackup()">Export Backup</button>
+<label class="btn secondary">Import Backup<input id="importFile" type="file" accept=".json" hidden></label>
+<button class="btn danger" type="button" onclick="deleteAll()">Delete All Data</button>
+</div>
+<p class="muted">Data is stored in this browser. Export backups regularly. The password gate is not secure server-side authentication.</p>
+</div>
+</section>
+
+<footer>Personal academic companion · Not an official CUOnline service</footer>
+</main>
+</div>
+
+<script>
+"use strict";
+function $(id){return document.getElementById(id)}
+
+/* Basic personal-use password gate, not server authentication. */
+const PASSWORD="9793";
+$("loginForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ if($("password").value===PASSWORD){
+  $("loginScreen").style.display="none";
+  $("password").value="";
+ }else $("loginError").textContent="Incorrect password.";
+});
+
+const KEY="shahzad_CUI_attendance_split_v6";
+const defaultProfile={
+ name:"Muhammad Shahzad",
+ father:"Azmat Hayat",
+ reg:"FA25-BCS-036",
+ email:"fa5-bcs-036@cuiatk.edu.pk",
+ degree:"BS Computer Science (BSCS)",
+ campus:"COMSATS University Islamabad, Attock Campus"
+};
+function blankData(){
+ return {
+  profile:{...defaultProfile},
+  courses:[],attendance:[],resources:[],
+  previous:{cgpa:"",credits:"",semester:""},
+  history:[],resultCard:null
+ };
+}
+let data;
+try{
+ const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+ data=saved&&Array.isArray(saved.courses)
+  ?{...blankData(),...saved,profile:{...defaultProfile,...saved.profile},previous:{...blankData().previous,...saved.previous}}
+  :blankData();
+}catch(e){data=blankData()}
+if(!Array.isArray(data.history))data.history=[];
+if(!Array.isArray(data.attendance))data.attendance=[];
+if(!Array.isArray(data.resources))data.resources=[];
+
+/* Convert attendance records created by the previous version.
+   Old records are treated as Theory because the old version did not
+   distinguish components. Review imported records after upgrading. */
+data.attendance.forEach(a=>{
+ if(!a.component)a.component="theory";
+ if(a.status==="Present")a.status="present";
+ if(a.status==="Absent")a.status="absent";
+});
+
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function byId(id){return data.courses.find(c=>c.id===id)}
+function courseName(c){return c.code+" — "+c.name}
+function save(){
+ try{
+  localStorage.setItem(KEY,JSON.stringify(data));
+  renderAll();
+ }catch(e){
+  alert("Browser storage is full. Export a backup or remove large uploaded files.");
+ }
+}
+
+/* Grade scale reference: verify the policy for your own batch. */
+function grade(p){
+ const n=Math.round(p);
+ if(n>=85)return {letter:"A",points:4};
+ if(n>=80)return {letter:"A−",points:3.66};
+ if(n>=75)return {letter:"B+",points:3.33};
+ if(n>=71)return {letter:"B",points:3};
+ if(n>=68)return {letter:"B−",points:2.66};
+ if(n>=64)return {letter:"C+",points:2.33};
+ if(n>=61)return {letter:"C",points:2};
+ if(n>=58)return {letter:"C−",points:1.66};
+ if(n>=54)return {letter:"D+",points:1.33};
+ if(n>=50)return {letter:"D",points:1};
+ return {letter:"F",points:0};
+}
+const categories=[
+ {key:"quizzes",label:"Quizzes",weight:"q"},
+ {key:"assignments",label:"Assignments",weight:"a"},
+ {key:"mid",label:"Midterm",weight:"m"},
+ {key:"final",label:"Final",weight:"f"}
+];
+function initCourse(c){
+ c.parts ||= {};
+ ["theory","lab"].forEach(part=>{
+  c.parts[part] ||= {
+   weights:{q:15,a:10,m:25,f:50},
+   items:{quizzes:[],assignments:[]},
+   marks:{mid:{o:"",t:""},final:{o:"",t:""}}
+  };
+  const p=c.parts[part];
+  p.weights||={q:15,a:10,m:25,f:50};
+  p.items||={quizzes:[],assignments:[]};
+  p.items.quizzes||=[];
+  p.items.assignments||=[];
+  p.marks||={mid:{o:"",t:""},final:{o:"",t:""}};
+  p.marks.mid||={o:"",t:""};
+  p.marks.final||={o:"",t:""};
+ });
+}
+function weightValid(w){
+ return ["q","a","m","f"].every(k=>Number.isFinite(+w[k])&&+w[k]>=0&&+w[k]<=100)
+ &&Math.abs(+w.q + +w.a + +w.m + +w.f-100)<0.001;
+}
+function rawCategory(p,key){
+ if(key==="quizzes"||key==="assignments"){
+  const a=p.items[key];
+  if(!a.length)return null;
+  const o=a.reduce((s,x)=>s+x.o,0);
+  const t=a.reduce((s,x)=>s+x.t,0);
+  return t>0?{o,t,pct:100*o/t}:null;
+ }
+ const m=p.marks[key];
+ if(!m||m.o===""||m.t==="")return null;
+ const o=Number(m.o),t=Number(m.t);
+ return Number.isFinite(o)&&Number.isFinite(t)&&t>0&&o>=0&&o<=t
+  ?{o,t,pct:100*o/t}:null;
+}
+function componentResult(p){
+ let score=0,recorded=0;
+ categories.forEach(cat=>{
+  const r=rawCategory(p,cat.key),w=Number(p.weights[cat.weight]||0);
+  if(r){score+=r.pct*w/100;recorded+=w}
+ });
+ return {score,recorded,complete:Math.abs(recorded-100)<0.001};
+}
+function courseResult(c){
+ initCourse(c);
+ const parts=[];
+ if(c.theoryCH>0)parts.push({name:"Theory",ch:c.theoryCH,r:componentResult(c.parts.theory)});
+ if(c.labCH>0)parts.push({name:"Lab",ch:c.labCH,r:componentResult(c.parts.lab)});
+ const ch=parts.reduce((s,p)=>s+p.ch,0);
+ const score=ch?parts.reduce((s,p)=>s+p.ch*p.r.score,0)/ch:0;
+ const complete=parts.length>0&&parts.every(p=>p.r.complete);
+ const pass=complete&&parts.every(p=>p.r.score>=50);
+ return {parts,ch,score,complete,pass,grade:grade(score)};
+}
+
+/* Separate attendance calculations. */
+function attendanceStats(c,component){
+ const a=data.attendance.filter(x=>
+  x.courseId===c.id&&(!component||x.component===component)
+ );
+ const present=a.filter(x=>x.status==="present").length;
+ return {held:a.length,present,absent:a.length-present,pct:a.length?100*present/a.length:null};
+}
+function overallAttendance(c){
+ const a=attendanceStats(c);
+ return a;
+}
+function attendanceClass(pct){
+ if(pct===null)return "muted";
+ return pct>=80?"good":"bad";
+}
+function attendanceText(pct){
+ if(pct===null)return "No records";
+ return pct.toFixed(1)+"%";
+}
+
+/* Navigation */
+function showPage(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.toggle("hidden",x.id!==id));
+ document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+
+/* Course setup */
+$("cStructure").addEventListener("change",()=>{
+ const s=$("cStructure").value,n=+$("cCredits").value;
+ if(s==="theory"){$("cTheoryCH").value=n;$("cLabCH").value=0}
+ if(s==="lab"){$("cTheoryCH").value=0;$("cLabCH").value=n}
+});
+$("cCredits").addEventListener("change",()=>{
+ const n=+$("cCredits").value,s=$("cStructure").value;
+ if(s==="theory"){$("cTheoryCH").value=n;$("cLabCH").value=0}
+ else if(s==="lab"){$("cTheoryCH").value=0;$("cLabCH").value=n}
+ else if(+$("cTheoryCH").value + +$("cLabCH").value!==n){
+  $("cTheoryCH").value=Math.max(0,n-1);
+  $("cLabCH").value=1;
+ }
+});
+$("courseForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const code=$("cCode").value.trim();
+ if(data.courses.some(c=>c.code.toLowerCase()===code.toLowerCase()))
+  return alert("Course code already exists.");
+ const credits=+$("cCredits").value;
+ const th=+$("cTheoryCH").value,lab=+$("cLabCH").value;
+ if(credits<=0||th+lab!==credits)
+  return alert("Theory and lab credit hours must add up to total credit hours.");
+ const parts={};
+ for(const [part,prefix] of [["theory","t"],["lab","l"]]){
+  parts[part]={
+   weights:{q:+$(prefix+"Q").value,a:+$(prefix+"A").value,m:+$(prefix+"M").value,f:+$(prefix+"F").value},
+   items:{quizzes:[],assignments:[]},
+   marks:{mid:{o:"",t:""},final:{o:"",t:""}}
+  };
+  const ch=part==="theory"?th:lab;
+  if(ch>0&&!weightValid(parts[part].weights))
+   return alert(part+" assessment weights must total 100%.");
+ }
+ data.courses.push({
+  id:uid(),name:$("cName").value.trim(),code,
+  semester:$("cSemester").value.trim(),
+  credits,theoryCH:th,labCH:lab,parts
+ });
+ e.target.reset();
+ $("cCredits").value=4;$("cTheoryCH").value=3;$("cLabCH").value=1;
+ save();
+});
+function deleteCourse(id){
+ if(!confirm("Delete this course and its marks, attendance and resources?"))return;
+ data.courses=data.courses.filter(c=>c.id!==id);
+ data.attendance=data.attendance.filter(a=>a.courseId!==id);
+ data.resources=data.resources.filter(r=>r.courseId!==id);
+ save();
+}
+function courseCard(c){
+ const r=courseResult(c),th=attendanceStats(c,"theory"),lb=attendanceStats(c,"lab");
+ return `<div class="card">
+ <div class="muted">${esc(c.code)} · ${c.credits} CH</div>
+ <h3>${esc(c.name)}</h3>
+ <p class="muted">Theory ${c.theoryCH} CH · Lab ${c.labCH} CH</p>
+ <div>Theory attendance: <strong class="${attendanceClass(th.pct)}">${attendanceText(th.pct)}</strong></div>
+ <div class="progress"><span style="width:${th.pct||0}%"></span></div>
+ ${c.labCH>0?`<div>Lab attendance: <strong class="${attendanceClass(lb.pct)}">${attendanceText(lb.pct)}</strong></div>
+ <div class="progress"><span style="width:${lb.pct||0}%"></span></div>`:""}
+ <p><strong>${r.score.toFixed(2)}%</strong><br><span class="muted">${r.complete?"Estimated grade "+r.grade.letter:"Marks incomplete"}</span></p>
+ <div class="actions">
+ <button class="btn small" onclick="openMarks('${c.id}')">Marks</button>
+ <button class="btn secondary small" onclick="openAttendance('${c.id}','theory')">Theory Attendance</button>
+ ${c.labCH>0?`<button class="btn secondary small" onclick="openAttendance('${c.id}','lab')">Lab Attendance</button>`:""}
+ <button class="btn danger small" onclick="deleteCourse('${c.id}')">Delete</button>
+ </div></div>`;
+}
+
+/* Marks and assessment categories */
+function fillSelect(id,all=false){
+ const el=$(id),old=el.value;
+ el.innerHTML=(all?'<option value="">All courses</option>':"")+
+ data.courses.map(c=>`<option value="${esc(c.id)}">${esc(courseName(c))}</option>`).join("");
+ if([...el.options].some(o=>o.value===old))el.value=old;
+}
+function openMarks(id){showPage("marks");$("markCourse").value=id;renderMarkEditor()}
+$("markCourse").addEventListener("change",renderMarkEditor);
+function renderMarkEditor(){
+ const c=byId($("markCourse").value),el=$("markEditor");
+ if(!c){el.innerHTML="Add a course first.";return}
+ initCourse(c);
+ el.innerHTML=`<h2>${esc(courseName(c))}</h2>
+ <div class="actions">
+ ${c.theoryCH?'<button class="btn" id="showTheory">Theory</button>':""}
+ ${c.labCH?'<button class="btn secondary" id="showLab">Lab</button>':""}
+ </div>
+ ${c.theoryCH?`<div id="theoryPanel" class="componentPanel">${componentHTML(c,"theory")}</div>`:""}
+ ${c.labCH?`<div id="labPanel" class="componentPanel hidden">${componentHTML(c,"lab")}</div>`:""}
+ <div class="card"><h3>Combined Course Result</h3><div id="combinedResult"></div></div>`;
+ if($("showTheory"))$("showTheory").onclick=()=>switchComponent("theory");
+ if($("showLab"))$("showLab").onclick=()=>switchComponent("lab");
+ ["theory","lab"].forEach(part=>{if($(part+"Panel"))bindComponent(c,part)});
+ renderCombined(c);
+}
+function switchComponent(part){
+ document.querySelectorAll(".componentPanel").forEach(x=>x.classList.add("hidden"));
+ $(part+"Panel").classList.remove("hidden");
+ if($("showTheory"))$("showTheory").className=part==="theory"?"btn":"btn secondary";
+ if($("showLab"))$("showLab").className=part==="lab"?"btn":"btn secondary";
+}
+function componentHTML(c,part){
+ const p=c.parts[part];
+ return `<h3>${part==="theory"?"Theory":"Lab"} · ${part==="theory"?c.theoryCH:c.labCH} CH</h3>
+ <div class="panel"><strong>Assessment weights (%)</strong><div class="two">
+ <label>Quizzes<input id="${part}wq" type="number" value="${p.weights.q}" min="0" max="100"></label>
+ <label>Assignments<input id="${part}wa" type="number" value="${p.weights.a}" min="0" max="100"></label>
+ <label>Midterm<input id="${part}wm" type="number" value="${p.weights.m}" min="0" max="100"></label>
+ <label>Final<input id="${part}wf" type="number" value="${p.weights.f}" min="0" max="100"></label>
+ </div><button class="btn small" id="${part}saveWeights">Save weights</button></div>
+ ${assessmentHTML(part,"quizzes","Quiz")}
+ ${assessmentHTML(part,"assignments","Assignment")}
+ <div class="card"><h3>Midterm & Final</h3><div class="two">
+ <label>Midterm obtained<input id="${part}mo" type="number" min="0" step="any" value="${esc(p.marks.mid.o)}"></label>
+ <label>Midterm total<input id="${part}mt" type="number" min="0.01" step="any" value="${esc(p.marks.mid.t)}"></label>
+ <label>Final obtained<input id="${part}fo" type="number" min="0" step="any" value="${esc(p.marks.final.o)}"></label>
+ <label>Final total<input id="${part}ft" type="number" min="0.01" step="any" value="${esc(p.marks.final.t)}"></label>
+ </div><button class="btn" id="${part}saveExams">Save exam marks</button></div>
+ <div class="card"><h3>Component result</h3><div id="${part}result"></div></div>`;
+}
+function assessmentHTML(part,key,label){
+ const short=key==="quizzes"?"q":"a";
+ return `<div class="card"><h3>${label}s</h3>
+ <form id="${part}${key}Form"><div class="two">
+ <label>Title<input id="${part}${short}t" required placeholder="${label} 1"></label>
+ <label>Date<input id="${part}${short}d" type="date" required></label>
+ <label>Obtained<input id="${part}${short}o" type="number" min="0" step="any" required></label>
+ <label>Total<input id="${part}${short}x" type="number" min="0.01" step="any" required></label>
+ </div><button class="btn">Save ${label}</button></form>
+ <div id="${part}${key}List" class="tablewrap"></div></div>`;
+}
+function bindComponent(c,part){
+ const p=c.parts[part];
+ $(part+"saveWeights").onclick=()=>{
+  const w={q:+$(part+"wq").value,a:+$(part+"wa").value,m:+$(part+"wm").value,f:+$(part+"wf").value};
+  if(!weightValid(w))return alert("Weights must total 100%.");
+  p.weights=w;save();renderMarkEditor();
+ };
+ for(const [key,short] of [["quizzes","q"],["assignments","a"]]){
+  $(part+key+"Form").onsubmit=e=>{
+   e.preventDefault();
+   const title=$(part+short+"t").value.trim(),date=$(part+short+"d").value;
+   const o=+$(part+short+"o").value,t=+$(part+short+"x").value;
+   if(!title||!date||!Number.isFinite(o)||!Number.isFinite(t)||t<=0||o<0||o>t)
+    return alert("Enter valid marks and date.");
+   p.items[key].push({id:uid(),title,date,o,t});
+   save();renderMarkEditor();
+  };
+ }
+ $(part+"saveExams").onclick=()=>{
+  const m={mid:{o:$(part+"mo").value,t:$(part+"mt").value},final:{o:$(part+"fo").value,t:$(part+"ft").value}};
+  for(const [key,x] of Object.entries(m)){
+   if(x.o!==""||x.t!==""){
+    if(x.o===""||x.t===""||+x.t<=0||+x.o<0||+x.o>+x.t)
+     return alert("Enter valid "+key+" marks.");
+   }
+  }
+  p.marks=m;save();renderMarkEditor();
+ };
+ renderItemTable(c,part,"quizzes");
+ renderItemTable(c,part,"assignments");
+ renderPartResult(c,part);
+}
+function renderItemTable(c,part,key){
+ const el=$(part+key+"List"),items=c.parts[part].items[key];
+ el.innerHTML=`<table><thead><tr><th>Title</th><th>Date</th><th>Marks</th><th></th></tr></thead><tbody>
+ ${items.map(x=>`<tr><td>${esc(x.title)}</td><td>${esc(x.date)}</td><td>${x.o}/${x.t}</td><td><button class="btn danger small" data-del="${esc(x.id)}">Delete</button></td></tr>`).join("")||'<tr><td colspan="4">No records</td></tr>'}
+ </tbody></table>`;
+ el.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+  if(!confirm("Delete assessment?"))return;
+  c.parts[part].items[key]=items.filter(x=>x.id!==b.dataset.del);
+  save();renderMarkEditor();
+ });
+}
+function renderPartResult(c,part){
+ const p=c.parts[part],r=componentResult(p);
+ $(part+"result").innerHTML=`<div class="tablewrap"><table>
+ <thead><tr><th>Category</th><th>Marks</th><th>Percentage</th><th>Weight</th><th>Contribution</th></tr></thead>
+ <tbody>${categories.map(cat=>{
+  const x=rawCategory(p,cat.key),w=p.weights[cat.weight];
+  return `<tr><td>${cat.label}</td><td>${x?x.o+"/"+x.t:"—"}</td><td>${x?x.pct.toFixed(2)+"%":"—"}</td><td>${w}%</td><td>${x?(x.pct*w/100).toFixed(2):"—"}</td></tr>`;
+ }).join("")}</tbody></table></div>
+ <p><strong>${r.score.toFixed(2)}%</strong> · Recorded weight ${r.recorded}%</p>
+ <p class="${r.complete?(r.score>=50?"good":"bad"):"muted"}">${r.complete?(r.score>=50?"Component is at least 50%":"Component below 50% — check course rules"):"Incomplete assessment records"}</p>`;
+}
+function renderCombined(c){
+ const r=courseResult(c);
+ $("combinedResult").innerHTML=`<div class="grid">
+ <div class="card"><div class="muted">Combined percentage</div><div class="stat">${r.score.toFixed(2)}%</div></div>
+ <div class="card"><div class="muted">Estimated grade</div><div class="stat">${r.complete?r.grade.letter:"—"}</div></div>
+ <div class="card"><div class="muted">Grade points</div><div class="stat">${r.complete?r.grade.points.toFixed(2):"—"}</div></div>
+ <div class="card"><div class="muted">Status</div><div class="stat" style="font-size:16px">${!r.complete?"Incomplete":r.pass?"Both ≥ 50%":"Review components"}</div></div>
+ </div><p class="muted">Combined percentage is weighted by theory and lab credit hours. This is an estimate, not an official transcript.</p>`;
+}
+
+/* CGPA calculator */
+function semesterCalc(){
+ const courses=data.courses.map(c=>({c,r:courseResult(c)}));
+ const completed=courses.filter(x=>x.r.complete);
+ const credits=completed.reduce((s,x)=>s+x.c.credits,0);
+ const quality=completed.reduce((s,x)=>s+x.c.credits*x.r.grade.points,0);
+ return {courses,completed,credits,quality,sgpa:credits?quality/credits:null};
+}
+function cgpaCalc(){
+ const old=Number(data.previous.cgpa),oldCredits=Number(data.previous.credits);
+ const prevValid=data.previous.cgpa!==""&&data.previous.credits!==""&&Number.isFinite(old)&&old>=0&&old<=4&&Number.isFinite(oldCredits)&&oldCredits>=0;
+ const sem=semesterCalc(),totalCredits=(prevValid?oldCredits:0)+sem.credits;
+ const valid=prevValid&&sem.credits>0;
+ return {prevValid,old,oldCredits,sem,totalCredits,newCGPA:valid?(old*oldCredits+sem.quality)/totalCredits:null,valid};
+}
+function renderCGPA(){
+ $("prevCGPA").value=data.previous.cgpa;
+ $("prevCredits").value=data.previous.credits;
+ $("semesterName").value=data.previous.semester;
+ const r=cgpaCalc(),sem=r.sem;
+ $("currentCredits").value=sem.credits||"";
+ $("outPrev").textContent=r.prevValid?r.old.toFixed(2):"—";
+ $("outSGPA").textContent=sem.sgpa===null?"—":sem.sgpa.toFixed(2);
+ $("outCGPA").textContent=r.valid?r.newCGPA.toFixed(2):"—";
+ $("outCredits").textContent=r.totalCredits||"—";
+ $("cgpaCourses").innerHTML=sem.courses.map(({c,r})=>`
+ <div class="panel"><strong>${esc(courseName(c))}</strong> · ${c.credits} CH
+ <p class="muted">Theory ${c.theoryCH} CH / Lab ${c.labCH} CH</p>
+ <div class="two"><div>Weighted marks: <strong>${r.score.toFixed(2)}%</strong></div>
+ <div>Estimated grade: <strong>${r.complete?r.grade.letter+" ("+r.grade.points.toFixed(2)+")":"Incomplete"}</strong></div></div>
+ <p class="muted">${r.complete?"Included in semester GPA":"Complete all weighted assessment categories to include this course"}</p></div>`).join("")||'<p class="muted">Add courses and marks first.</p>';
+ $("cgpaDetails").innerHTML=r.valid
+ ?`Previous quality points: ${r.old.toFixed(2)} × ${r.oldCredits} = ${(r.old*r.oldCredits).toFixed(2)}<br>Current semester quality points: ${sem.quality.toFixed(2)}<br>Total counted credit hours: ${r.totalCredits}<br><strong>Updated CGPA = ${r.newCGPA.toFixed(4)} → ${r.newCGPA.toFixed(2)}</strong>`
+ :"Enter a valid previous CGPA, previous credit hours, and completed current-semester marks.";
+ renderSemesterHistory();
+}
+$("savePrevious").onclick=()=>{
+ const g=$("prevCGPA").value,cr=$("prevCredits").value;
+ if(g===""||cr===""||!Number.isFinite(+g)||+g<0||+g>4||!Number.isFinite(+cr)||+cr<0)
+  return alert("Enter a valid previous CGPA and credit hours.");
+ data.previous={cgpa:+g,credits:+cr,semester:$("semesterName").value.trim()};
+ save();
+};
+["prevCGPA","prevCredits","semesterName"].forEach(id=>$(id).addEventListener("input",()=>{
+ data.previous={cgpa:$("prevCGPA").value,credits:$("prevCredits").value,semester:$("semesterName").value};
+ renderCGPA();
+}));
+$("saveSemester").onclick=()=>{
+ const r=cgpaCalc();
+ if(!r.valid)return alert("Enter previous CGPA/credits and complete current semester marks first.");
+ const name=data.previous.semester.trim()||"Current Semester";
+ if(data.history.some(h=>h.name===name))return alert("This semester already exists. Choose a unique name.");
+ data.history.push({id:uid(),name,credits:r.sem.credits,sgpa:r.sem.sgpa,cgpa:r.newCGPA,totalCredits:r.totalCredits,quality:r.sem.quality,date:new Date().toISOString().slice(0,10)});
+ data.previous={cgpa:r.newCGPA,credits:r.totalCredits,semester:""};
+ save();
+ alert("Semester saved. Your new CGPA is now the baseline for the next semester.");
+};
+function renderSemesterHistory(){
+ $("semesterHistory").innerHTML=`<table><thead><tr><th>Semester</th><th>Credits</th><th>SGPA</th><th>CGPA</th><th>Date saved</th><th></th></tr></thead><tbody>
+ ${data.history.map(h=>`<tr><td>${esc(h.name)}</td><td>${h.credits}</td><td>${Number(h.sgpa).toFixed(2)}</td><td>${Number(h.cgpa).toFixed(2)}</td><td>${esc(h.date)}</td><td><button class="btn danger small" data-delhist="${esc(h.id)}">Delete</button></td></tr>`).join("")||'<tr><td colspan="6">No saved semesters yet.</td></tr>'}
+ </tbody></table>`;
+ $("semesterHistory").querySelectorAll("[data-delhist]").forEach(b=>b.onclick=()=>{
+  if(!confirm("Delete this history row?"))return;
+  data.history=data.history.filter(h=>h.id!==b.dataset.delhist);save();
+ });
+}
+$("resultFile").addEventListener("change",e=>{
+ const f=e.target.files[0];if(!f)return;
+ if(f.size>1024*1024){alert("Choose a result card under 1 MB.");e.target.value="";return}
+ if(!["application/pdf","image/png","image/jpeg","image/webp"].includes(f.type)){alert("Please select a PDF or image.");e.target.value="";return}
+ const reader=new FileReader();
+ reader.onload=()=>{data.resultCard={name:f.name,type:f.type,data:reader.result};save()};
+ reader.onerror=()=>alert("Could not read file.");
+ reader.readAsDataURL(f);
+});
+$("removeResultFile").onclick=()=>{data.resultCard=null;$("resultFile").value="";save()};
+function renderResultCard(){
+ const box=$("resultPreview"),r=data.resultCard;
+ if(!r){box.classList.add("hidden");box.innerHTML="";return}
+ box.classList.remove("hidden");
+ box.innerHTML=`<strong>Uploaded: ${esc(r.name)}</strong>
+ <div class="actions"><a class="btn secondary" href="${r.data}" download="${esc(r.name)}">Open / Download</a></div>
+ ${r.type.startsWith("image/")?`<img src="${r.data}" alt="Result card" style="max-width:100%;max-height:500px;object-fit:contain">`:"<p class='muted'>PDF stored. Use Open / Download to view it.</p>"}`;
+}
+function downloadBlob(blob,name){
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$("exportTranscript").onclick=()=>{
+ const r=cgpaCalc(),sem=r.sem;
+ downloadBlob(new Blob([JSON.stringify({
+  student:data.profile,previous:data.previous,
+  currentSemester:sem.courses.map(({c,r})=>({code:c.code,name:c.name,credits:c.credits,percentage:r.score,complete:r.complete,grade:r.complete?r.grade.letter:null,gradePoints:r.complete?r.grade.points:null})),
+  semesterGPA:sem.sgpa,newCGPA:r.newCGPA,totalCredits:r.totalCredits,history:data.history
+ },null,2)],{type:"application/json"}),"academic-summary.json");
+};
+
+/* Separate theory and lab attendance forms. */
+function openAttendance(id,component){
+ showPage("attendance");
+ $("attCourse").value=id;
+ $("attComponent").value=component||"theory";
+ updateAttendanceInfo();
+}
+$("attCourse").addEventListener("change",updateAttendanceInfo);
+$("attComponent").addEventListener("change",updateAttendanceInfo);
+function updateAttendanceInfo(){
+ const c=byId($("attCourse").value),component=$("attComponent").value;
+ if(!c){$("attComponentInfo").textContent="Add a course first.";return}
+ if(component==="theory"&&c.theoryCH===0){
+  $("attComponentInfo").textContent="This course has no theory credit hours. Select Lab instead.";
+ }else if(component==="lab"&&c.labCH===0){
+  $("attComponentInfo").textContent="This course has no lab credit hours. Select Theory instead.";
+ }else{
+  const a=attendanceStats(c,component);
+  $("attComponentInfo").innerHTML=`<strong>${esc(c.code)} · ${component==="theory"?"Theory":"Lab"}</strong><br>
+  Classes recorded: ${a.held} · Present: ${a.present} · Absent: ${a.absent}<br>
+  Attendance: <span class="${attendanceClass(a.pct)}">${attendanceText(a.pct)}</span>
+  ${a.pct!==null&&a.pct<80?" · Below the 80% personal warning threshold":""}`;
+ }
+}
+$("attForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const id=$("attCourse").value,component=$("attComponent").value;
+ const date=$("attDate").value,status=$("attStatus").value,c=byId(id);
+ if(!c||!date)return alert("Select a course and date.");
+ if(component==="theory"&&c.theoryCH===0)return alert("This course has no theory credit hours.");
+ if(component==="lab"&&c.labCH===0)return alert("This course has no lab credit hours.");
+ if(data.attendance.some(a=>a.courseId===id&&a.component===component&&a.date===date))
+  return alert("Attendance is already recorded for this course, component and date.");
+ data.attendance.push({id:uid(),courseId:id,component,date,status});
+ save();
+});
+$("attFilterCourse").addEventListener("change",renderAttendance);
+$("attFilterComponent").addEventListener("change",renderAttendance);
+
+function renderAttendance(){
+ $("attSummary").innerHTML=`<table><thead><tr>
+ <th>Course</th><th>Theory present/classes</th><th>Theory %</th>
+ <th>Lab present/classes</th><th>Lab %</th><th>Overall %</th></tr></thead><tbody>
+ ${data.courses.map(c=>{
+  const th=attendanceStats(c,"theory"),lb=attendanceStats(c,"lab"),all=overallAttendance(c);
+  return `<tr><td>${esc(courseName(c))}</td>
+  <td>${th.present}/${th.held}</td><td class="${attendanceClass(th.pct)}">${attendanceText(th.pct)}</td>
+  <td>${c.labCH>0?lb.present+"/"+lb.held:"N/A"}</td><td class="${attendanceClass(lb.pct)}">${c.labCH>0?attendanceText(lb.pct):"N/A"}</td>
+  <td class="${attendanceClass(all.pct)}">${attendanceText(all.pct)}</td></tr>`;
+ }).join("")||'<tr><td colspan="6">Add courses first.</td></tr>'}</tbody></table>`;
+
+ const fc=$("attFilterCourse")?$("attFilterCourse").value:"";
+ const fp=$("attFilterComponent")?$("attFilterComponent").value:"";
+ const rows=data.attendance.filter(a=>(!fc||a.courseId===fc)&&(!fp||a.component===fp)).slice().sort((a,b)=>b.date.localeCompare(a.date));
+ $("attHistory").innerHTML=`<table><thead><tr><th>Date</th><th>Course</th><th>Component</th><th>Status</th><th></th></tr></thead><tbody>
+ ${rows.map(a=>`<tr><td>${esc(a.date)}</td><td>${esc(byId(a.courseId)?courseName(byId(a.courseId)):"Deleted course")}</td>
+ <td>${a.component==="lab"?"Lab":"Theory"}</td>
+ <td class="${a.status==="present"?"good":"bad"}">${a.status==="present"?"Present":"Absent"}</td>
+ <td><button class="btn danger small" data-delatt="${esc(a.id)}">Delete</button></td></tr>`).join("")||'<tr><td colspan="5">No attendance records.</td></tr>'}</tbody></table>`;
+ $("attHistory").querySelectorAll("[data-delatt]").forEach(b=>b.onclick=()=>{
+  if(!confirm("Delete this attendance entry?"))return;
+  data.attendance=data.attendance.filter(a=>a.id!==b.dataset.delatt);
+  save();
+ });
+ updateAttendanceInfo();
+}
+function downloadCSVTemplate(){
+ const csv="courseCode,component,date,status\nCSC112,theory,2026-10-14,Present\nCSC112,lab,2026-10-14,Absent\n";
+ downloadBlob(new Blob([csv],{type:"text/csv"}),"attendance-template.csv");
+}
+$("csvFile").addEventListener("change",async e=>{
+ const f=e.target.files[0];if(!f)return;
+ const lines=(await f.text()).replace(/^\uFEFF/,"").trim().split(/\r?\n/);
+ let added=0,skipped=0;
+ lines.slice(1).forEach(line=>{
+  const [code,component,date,status]=line.split(",").map(x=>x.trim().replace(/^"|"$/g,""));
+  const c=data.courses.find(x=>x.code.toLowerCase()===String(code).toLowerCase());
+  const comp=String(component).toLowerCase(),s=String(status).toLowerCase();
+  if(!c||!date||!["theory","lab"].includes(comp)||!["present","absent"].includes(s)
+   ||(comp==="theory"&&c.theoryCH===0)||(comp==="lab"&&c.labCH===0)
+   ||data.attendance.some(a=>a.courseId===c.id&&a.component===comp&&a.date===date)){
+    skipped++;return;
+  }
+  data.attendance.push({id:uid(),courseId:c.id,component:comp,date,status:s});added++;
+ });
+ save();
+ $("csvStatus").textContent=`Imported ${added}; skipped ${skipped}.`;
+ e.target.value="";
+});
+
+/* Lectures and saved resources */
+$("resourceForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const f=$("rFile").files[0],url=$("rUrl").value.trim();
+ if(f&&f.size>1024*1024)return alert("Choose a file under 1 MB.");
+ if(url&&!/^https?:\/\//i.test(url))return alert("Enter a valid HTTP/HTTPS URL.");
+ let fileData=null;
+ if(f)fileData=await new Promise((resolve,reject)=>{
+  const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(f);
+ });
+ data.resources.push({
+  id:uid(),courseId:$("rCourse").value,title:$("rTitle").value.trim(),
+  type:$("rType").value,notes:$("rNotes").value,url,
+  fileName:f?f.name:"",fileData
+ });
+ e.target.reset();save();
+});
+$("rFilter").addEventListener("change",renderResources);
+function renderResources(){
+ const filter=$("rFilter").value;
+ const rows=data.resources.filter(r=>!filter||r.courseId===filter);
+ $("resourceList").innerHTML=rows.map(r=>`<div class="card">
+ <div class="muted">${esc(byId(r.courseId)?.code||"Course")} · ${esc(r.type)}</div>
+ <h3>${esc(r.title)}</h3><p>${esc(r.notes)}</p>
+ ${r.fileData?`<p><a href="${r.fileData}" download="${esc(r.fileName)}">Download ${esc(r.fileName)}</a></p>`:""}
+ ${r.url?`<p><a href="${esc(r.url)}" target="_blank" rel="noopener">Open resource ↗</a></p>`:""}
+ <button class="btn danger small" data-delres="${esc(r.id)}">Delete</button></div>`).join("")||'<p class="muted">No resources saved.</p>';
+ $("resourceList").querySelectorAll("[data-delres]").forEach(b=>b.onclick=()=>{
+  if(!confirm("Delete resource?"))return;
+  data.resources=data.resources.filter(r=>r.id!==b.dataset.delres);save();
+ });
+}
+
+/* Profile and backups */
+function renderProfile(){
+ const p=data.profile;
+ $("pName").value=p.name||"";$("pFather").value=p.father||"";
+ $("pReg").value=p.reg||"";$("pEmail").value=p.email||"";
+ $("pDegree").value=p.degree||"";$("pCampus").value=p.campus||"";
+ $("welcome").textContent="Assalam-o-Alaikum, "+(p.name||"Student")+"!";
+}
+$("profileForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ data.profile={
+  name:$("pName").value.trim(),father:$("pFather").value.trim(),
+  reg:$("pReg").value.trim(),email:$("pEmail").value.trim(),
+  degree:$("pDegree").value.trim(),campus:$("pCampus").value.trim()
+ };
+ save();alert("Profile saved.");
+});
+function exportBackup(){
+ downloadBlob(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),"shahzad-CUI-backup.json");
+}
+$("importFile").addEventListener("change",async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{
+  const x=JSON.parse(await f.text());
+  if(!x.profile||!Array.isArray(x.courses)||!Array.isArray(x.attendance)||!Array.isArray(x.resources))throw Error();
+  if(!confirm("Replace all current data with this backup?"))return;
+  data={...blankData(),...x,profile:{...defaultProfile,...x.profile},previous:{...blankData().previous,...x.previous}};
+  data.courses.forEach(initCourse);
+  data.attendance.forEach(a=>{if(!a.component)a.component="theory"});
+  save();alert("Backup imported.");
+ }catch(err){alert("Invalid backup file.");}
+ finally{e.target.value=""}
+});
+function deleteAll(){
+ if(!confirm("Delete all courses, marks, attendance, resources, result card and academic history?"))return;
+ data=blankData();save();
+}
+
+/* Main render */
+function renderCourseCards(){
+ const html=data.courses.map(courseCard).join("")||'<div class="card">No courses yet. Add your first course.</div>';
+ $("courseList").innerHTML=html;
+ $("dashboardCourses").innerHTML=html;
+}
+function renderAll(){
+ data.courses.forEach(initCourse);
+ ["markCourse","attCourse","rCourse"].forEach(id=>fillSelect(id));
+ fillSelect("rFilter",true);
+ fillSelect("attFilterCourse",true);
+ renderProfile();
+ renderCourseCards();
+ renderMarkEditor();
+ renderAttendance();
+ renderResources();
+ renderResultCard();
+ renderCGPA();
+
+ $("sCourses").textContent=data.courses.length;
+ const all=data.attendance;
+ const overall=all.length?100*all.filter(a=>a.status==="present").length/all.length:null;
+ $("sAttendance").textContent=overall===null?"—":overall.toFixed(1)+"%";
+ $("sPrevious").textContent=data.previous.cgpa!==""?Number(data.previous.cgpa).toFixed(2):"—";
+ const r=cgpaCalc();
+ $("sCGPA").textContent=r.valid?r.newCGPA.toFixed(2):"—";
+
+ const low=[];
+ data.courses.forEach(c=>{
+  const th=attendanceStats(c,"theory"),lb=attendanceStats(c,"lab");
+  if(th.pct!==null&&th.pct<80)low.push(c.code+" Theory");
+  if(c.labCH>0&&lb.pct!==null&&lb.pct<80)low.push(c.code+" Lab");
+ });
+ $("alerts").textContent=low.length
+  ?"Attendance below 80%: "+low.join(", ")+". This is a personal warning, not official exam clearance."
+  :"Keep recording theory and lab attendance separately. The 80% indicator is a tracker, not official exam eligibility.";
+}
+renderAll();
+</script>
+</body>
+</html>
